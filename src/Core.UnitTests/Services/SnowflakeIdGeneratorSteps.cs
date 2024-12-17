@@ -1,6 +1,7 @@
-﻿namespace UrlShortener.Core.Services.Tests
+﻿namespace UrlShortener.Core.UnitTests.Services
 {
     using Moq;
+    using UrlShortener.Core.Services;
     using Xunit;
 
     public class SnowflakeIdGeneratorSteps
