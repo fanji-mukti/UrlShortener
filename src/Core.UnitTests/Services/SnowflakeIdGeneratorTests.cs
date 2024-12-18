@@ -3,17 +3,22 @@
     public sealed class SnowflakeIdGeneratorTests
     {
         private readonly SnowflakeIdGeneratorSteps _steps = new SnowflakeIdGeneratorSteps();
-
-        [Fact]
-        public void GenerateId_ShouldReturnUniqueId()
+        public static IEnumerable<object[]> TestData => new List<object[]>
         {
-            var dataCenterId = 1;
-            var workerId = 1;
-            var timestamp = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            var expected = 135168L;
+            new object[] { 1, 1, new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc), 135168L },
+        };
+
+        [Theory]
+        [MemberData(nameof(TestData))]
+        public void GenerateId_ShouldReturnUniqueId(
+            long dataCenterId,
+            long workerId,
+            DateTime generatedAt,
+            long expected)
+        {
             _steps
                 .Given_A_TimeProvider_With(dataCenterId, workerId)
-                .Given_The_Time_Is(timestamp)
+                .Given_The_Time_Is(generatedAt)
                 .When_Generating_An_Id()
                 .Then_The_Id_Should_Be(expected);
         }
