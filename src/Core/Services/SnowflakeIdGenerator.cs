@@ -5,7 +5,7 @@
     /// </summary>
     public sealed class SnowflakeIdGenerator : IIdGenerator
     {
-        private const long Epoch = 1640995200000L; // Custom epoch (e.g., January 1, 2022)
+        private const long Epoch = 1735689600000L; // Custom epoch (January 1, 2025)
         private const int DatacenterIdBits = 5;
         private const int WorkerIdBits = 5;
         private const int SequenceBits = 12;

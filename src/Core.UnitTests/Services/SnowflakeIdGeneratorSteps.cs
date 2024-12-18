@@ -3,7 +3,6 @@
     using FluentAssertions;
     using Moq;
     using UrlShortener.Core.Services;
-    using Xunit;
 
     public sealed class SnowflakeIdGeneratorSteps
     {
@@ -41,11 +40,13 @@
             return this;
         }
 
-        public void Then_The_Id_Should_Be_TimeBased()
+        public SnowflakeIdGeneratorSteps Then_The_Id_Should_Be_TimeBased()
         {
             long timestampPart = (_generatedId >> (5 + 5 + 12));
             long expectedTimestampPart = (_generatedTime - 1640995200000L); // Subtract custom epoch
-            Assert.Equal(expectedTimestampPart, timestampPart);
+
+            timestampPart.Should().Be(expectedTimestampPart);
+            return this;
         }
     }
 }

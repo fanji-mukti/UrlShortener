@@ -9,7 +9,7 @@
         {
             var dataCenterId = 1;
             var workerId = 1;
-            var timestamp = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var timestamp = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             var expected = 135168L;
             _steps
                 .Given_A_TimeProvider_With(dataCenterId, workerId)
