@@ -1,5 +1,6 @@
 ﻿namespace UrlShortener.Core.UnitTests.Services
 {
+    using FluentAssertions;
     using Moq;
     using UrlShortener.Core.Services;
     using Xunit;
@@ -34,10 +35,10 @@
             return this;
         }
 
-        public void Then_The_Id_Should_Be(long expected)
+        public SnowflakeIdGeneratorSteps Then_The_Id_Should_Be(long expected)
         {
-            Assert.NotNull(_generatedId);
-            // Additional assertions can be added here to verify the structure of the ID
+            _generatedId.Should().Be(expected);
+            return this;
         }
 
         public void Then_The_Id_Should_Be_TimeBased()
