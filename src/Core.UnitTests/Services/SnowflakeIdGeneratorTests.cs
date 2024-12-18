@@ -1,6 +1,6 @@
 ﻿namespace UrlShortener.Core.UnitTests.Services
 {
-    public class SnowflakeIdGeneratorTests
+    public sealed class SnowflakeIdGeneratorTests
     {
         private readonly SnowflakeIdGeneratorSteps _steps = new SnowflakeIdGeneratorSteps();
 

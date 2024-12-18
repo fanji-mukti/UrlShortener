@@ -3,7 +3,7 @@
     /// <summary>
     /// Provides the current time in milliseconds using the system clock.
     /// </summary>
-    public class DefaultTimeProvider : ITimeProvider
+    public sealed class DefaultTimeProvider : ITimeProvider
     {
         /// <summary>
         /// Gets the current time in milliseconds since the Unix epoch.

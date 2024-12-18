@@ -4,7 +4,7 @@
     using UrlShortener.Core.Services;
     using Xunit;
 
-    public class SnowflakeIdGeneratorSteps
+    public sealed class SnowflakeIdGeneratorSteps
     {
         private Mock<ITimeProvider> _mockTimeProvider = new Mock<ITimeProvider>();
         private SnowflakeIdGenerator _generator;

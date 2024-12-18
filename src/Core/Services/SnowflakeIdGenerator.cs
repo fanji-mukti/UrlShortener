@@ -3,7 +3,7 @@
     /// <summary> 
     /// Generates unique identifiers using the Snowflake algorithm.
     /// </summary>
-    public class SnowflakeIdGenerator : IIdGenerator
+    public sealed class SnowflakeIdGenerator : IIdGenerator
     {
         private const long Epoch = 1640995200000L; // Custom epoch (e.g., January 1, 2022)
         private const int DatacenterIdBits = 5;
