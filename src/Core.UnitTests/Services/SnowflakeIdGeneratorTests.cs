@@ -1,34 +1,36 @@
 ﻿namespace UrlShortener.Core.UnitTests.Services
 {
+    using UrlShortener.Core.UnitTests.Services.TestData;
+
     public sealed class SnowflakeIdGeneratorTests
     {
         private readonly SnowflakeIdGeneratorSteps _steps = new SnowflakeIdGeneratorSteps();
-        public static IEnumerable<object[]> TestData => new List<object[]>
+
+        public static IEnumerable<object[]> Data => new List<object[]>
         {
-            new object[] { 1, 1, new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc), 135168L },
+            new object[] 
+            { 
+                new IdUniquenessTestData
+                {
+                    DataCenterId = 1,
+                    WorkerId = 1,
+                    GeneratedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    Expectation = 135168L,
+                    Description = "Generating the first unique ID on January 1, 2025, at Data Center 1 with Worker 1"
+                }
+            },
         };
 
         [Theory]
-        [MemberData(nameof(TestData))]
-        public void GenerateId_ShouldReturnUniqueId(
-            long dataCenterId,
-            long workerId,
-            DateTime generatedAt,
-            long expected)
+        [MemberData(nameof(Data))]
+        public void GenerateId_ShouldReturnUniqueId(IdUniquenessTestData scenario)
         {
             _steps
-                .Given_A_TimeProvider_With(dataCenterId, workerId)
-                .Given_The_Time_Is(generatedAt)
+                .Given_A_TimeProvider_With(scenario.DataCenterId, scenario.WorkerId)
+                .Given_The_Time_Is(scenario.GeneratedAt)
                 .When_Generating_An_Id()
-                .Then_The_Id_Should_Be(expected);
-        }
-
-        [Fact]
-        public void GenerateId_ShouldContainTimeBasedComponent()
-        {
-            //_steps.Given_A_TimeProvider_And_SnowflakeIdGenerator();
-            //_steps.When_Generating_An_Id();
-            //_steps.Then_The_Id_Should_Be_TimeBased();
+                .Then_The_Id_Should_Be(scenario.Expectation)
+                .Then_The_Id_Should_Be_TimeBased();
         }
     }
 }

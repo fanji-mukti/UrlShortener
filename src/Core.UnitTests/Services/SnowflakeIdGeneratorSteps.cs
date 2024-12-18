@@ -43,7 +43,7 @@
         public SnowflakeIdGeneratorSteps Then_The_Id_Should_Be_TimeBased()
         {
             long timestampPart = (_generatedId >> (5 + 5 + 12));
-            long expectedTimestampPart = (_generatedTime - 1640995200000L); // Subtract custom epoch
+            long expectedTimestampPart = (_generatedTime - 1735689600000L); // Subtract custom epoch
 
             timestampPart.Should().Be(expectedTimestampPart);
             return this;
