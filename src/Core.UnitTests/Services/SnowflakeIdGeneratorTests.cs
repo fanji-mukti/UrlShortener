@@ -18,8 +18,44 @@
                     GeneratedIdCount = 0,
                     Expectation = 135168L,
                     Description = "Generating the first unique ID on January 1, 2025, at Data Center 1 with Worker 1"
-                }
+                },
             },
+            new object[]
+            {
+                new IdUniquenessTestData
+                {
+                    DataCenterId = 2,
+                    WorkerId = 1,
+                    GeneratedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    GeneratedIdCount = 0,
+                    Expectation = 266240L,
+                    Description = "Generating the first unique ID on January 1, 2025, at Data Center 2 with Worker 1"
+                },
+            },
+            new object[]
+            {
+                new IdUniquenessTestData
+                {
+                    DataCenterId = 1,
+                    WorkerId = 2,
+                    GeneratedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    GeneratedIdCount = 0,
+                    Expectation = 139264L,
+                    Description = "Generating the first unique ID on January 1, 2025, at Data Center 1 with Worker 2"
+                },
+            },
+            new object[]
+            {
+                new IdUniquenessTestData
+                {
+                    DataCenterId = 1,
+                    WorkerId = 1,
+                    GeneratedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    GeneratedIdCount = 9,
+                    Expectation = 135177L,
+                    Description = "Generating the ninth unique ID on January 1, 2025, at Data Center 1 with Worker 1"
+                }
+            }
         };
 
         [Theory]
