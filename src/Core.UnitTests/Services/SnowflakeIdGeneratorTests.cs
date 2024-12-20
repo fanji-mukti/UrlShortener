@@ -55,7 +55,31 @@
                     Expectation = 135177L,
                     Description = "Generating the ninth unique ID on January 1, 2025, at Data Center 1 with Worker 1"
                 }
-            }
+            },
+            new object[]
+            {
+                new IdUniquenessTestData
+                {
+                    DataCenterId = 2,
+                    WorkerId = 1,
+                    GeneratedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    GeneratedIdCount = 9,
+                    Expectation = 266249L,
+                    Description = "Generating the ninth unique ID on January 1, 2025, at Data Center 2 with Worker 1"
+                }
+            },
+            new object[]
+            {
+                new IdUniquenessTestData
+                {
+                    DataCenterId = 1,
+                    WorkerId = 2,
+                    GeneratedAt = new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                    GeneratedIdCount = 9,
+                    Expectation = 139273L,
+                    Description = "Generating the ninth unique ID on January 1, 2025, at Data Center 1 with Worker 2"
+                }
+            },
         };
 
         [Theory]
