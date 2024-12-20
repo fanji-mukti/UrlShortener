@@ -6,9 +6,11 @@
 
     public sealed class SnowflakeIdGeneratorSteps
     {
-        private Mock<ITimeProvider> _mockTimeProvider = new Mock<ITimeProvider>();
+        
+        private readonly Mock<ITimeProvider> _mockTimeProvider = new Mock<ITimeProvider>();
         private SnowflakeIdGenerator _generator;
         private long _generatedId;
+        private List<long> _generatedIds = new List<long>();
         private long _generatedTime;
 
         public SnowflakeIdGeneratorSteps Given_A_TimeProvider_With(long datacenterId, long workerId)
@@ -28,15 +30,32 @@
             return this;
         }
 
+        public SnowflakeIdGeneratorSteps Given_There_Are_Id_Generated_At_The_Same_Milliseconds(int generatedIdCount)
+        {
+            for (int i = 0; i < generatedIdCount; i++)
+            {
+                this.When_Generating_An_Id();
+            }
+
+            return this;
+        }
+
         public SnowflakeIdGeneratorSteps When_Generating_An_Id()
         {
             _generatedId = _generator.GenerateId();
+            _generatedIds.Add(_generatedId);
             return this;
         }
 
         public SnowflakeIdGeneratorSteps Then_The_Id_Should_Be(long expected)
         {
             _generatedId.Should().Be(expected);
+            return this;
+        }
+
+        public SnowflakeIdGeneratorSteps Then_The_Id_Should_Be_Unique()
+        {
+            _generatedIds.Should().OnlyHaveUniqueItems();
             return this;
         }
 

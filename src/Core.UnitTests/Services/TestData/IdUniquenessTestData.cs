@@ -6,6 +6,8 @@
 
         public long WorkerId { get; set; }
 
+        public int GeneratedIdCount { get; set; }
+
         public long Expectation { get; set; }
 
         public DateTime GeneratedAt { get; set; }
