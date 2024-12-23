@@ -1,5 +1,6 @@
 ﻿namespace UrlShortener.Core.Utilities
 {
+    using EnsureThat;
     using System.Text;
 
     /// <summary>
@@ -16,8 +17,11 @@
         /// </summary>
         /// <param name="number">The number to encode.</param>
         /// <returns>A string representation of the encoded number.</returns>
+        /// /// <exception cref="ArgumentOutOfRangeException">Thrown when the number is less than 0.</exception>
         public string Encode(long number)
         {
+            EnsureArg.IsGte(number, 0, nameof(number));
+
             if (number == 0)
             {
                 return CustomBaseChars[0].ToString();
