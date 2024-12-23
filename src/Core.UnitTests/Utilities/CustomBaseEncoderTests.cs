@@ -28,14 +28,13 @@ namespace UrlShortener.Core.UnitTests.Utilities
         }
 
         [Fact]
-        public void Encode_ShouldReturnZeroCharacter_WhenNumberIsNegative()
+        public void Encode_ShouldThrowArgumentOutOfRangeException_WhenNumberIsNegative()
         {
             _steps
                 .GivenAnEncoder()
                 .GivenANumber(-1)
                 .WhenEncodingTheNumber()
-                .ThenTheResultShouldBe("0")
-                .ThenNoExceptionShouldBeThrown();
+                .ThenAnExceptionShouldBeThrown<ArgumentOutOfRangeException>();
         }
 
         [Fact]
