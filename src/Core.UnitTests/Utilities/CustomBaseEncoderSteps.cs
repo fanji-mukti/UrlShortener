@@ -8,6 +8,7 @@
         private CustomBaseEncoder _encoder;
         private long _number;
         private string _result;
+        private Exception _exception;
 
         public CustomBaseEncoderSteps GivenAnEncoder()
         {
@@ -23,14 +24,28 @@
 
         public CustomBaseEncoderSteps WhenEncodingTheNumber()
         {
-            _result = _encoder.Encode(_number);
+            _exception = Record.Exception(() => _result = _encoder.Encode(_number));
             return this;
         }
 
-        public void ThenTheResultShouldBe(string expected)
+        public CustomBaseEncoderSteps ThenTheResultShouldBe(string expected)
         {
             _result.Should().NotBeNullOrEmpty();
             _result.Should().Be(expected);
+            return this;
+        }
+
+        public CustomBaseEncoderSteps ThenAnExceptionShouldBeThrown<TException>() where TException : Exception
+        {
+            _exception.Should().NotBeNull();
+            _exception.Should().BeOfType<TException>();
+            return this;
+        }
+
+        public CustomBaseEncoderSteps ThenNoExceptionShouldBeThrown()
+        {
+            _exception.Should().BeNull();
+            return this;
         }
     }
 }

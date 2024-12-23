@@ -23,7 +23,8 @@ namespace UrlShortener.Core.UnitTests.Utilities
                 .GivenAnEncoder()
                 .GivenANumber(0)
                 .WhenEncodingTheNumber()
-                .ThenTheResultShouldBe("0");
+                .ThenTheResultShouldBe("0")
+                .ThenNoExceptionShouldBeThrown();
         }
 
         [Fact]
@@ -33,7 +34,8 @@ namespace UrlShortener.Core.UnitTests.Utilities
                 .GivenAnEncoder()
                 .GivenANumber(-1)
                 .WhenEncodingTheNumber()
-                .ThenTheResultShouldBe("0");
+                .ThenTheResultShouldBe("0")
+                .ThenNoExceptionShouldBeThrown();
         }
 
         [Fact]
@@ -43,7 +45,8 @@ namespace UrlShortener.Core.UnitTests.Utilities
                 .GivenAnEncoder()
                 .GivenANumber(11234023833735169L)
                 .WhenEncodingTheNumber()
-                .ThenTheResultShouldBe("IY00V01");
+                .ThenTheResultShouldBe("IY00V01")
+                .ThenNoExceptionShouldBeThrown();
         }
     }
 }
