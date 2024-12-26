@@ -19,13 +19,13 @@
         /// </summary>
         /// <param name="shortUrl">The short URL to retrieve.</param>
         /// <returns>The shortened URL if found; otherwise, null.</returns>
-        Task<ShortenedUrl> GetAsync(string shortUrl);
+        Task<ShortenedUrl?> GetAsync(string shortUrl);
 
         /// <summary>
         /// Retrieves a shortened URL from the repository by its original URL.
         /// </summary>
         /// <param name="originalUrl">The original URL to retrieve.</param>
         /// <returns>The shortened URL if found; otherwise, null.</returns>
-        Task<ShortenedUrl> GetByOriginalUrlAsync(string originalUrl);
+        Task<ShortenedUrl?> GetByOriginalUrlAsync(string originalUrl);
     }
 }
