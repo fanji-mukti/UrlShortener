@@ -39,7 +39,8 @@
                 .WhenGetAsyncIsCalled()
                 .ConfigureAwait(true);
 
-            _steps.ThenNullShouldBeReturned();
+            _steps
+                .ThenNullShouldBeReturned();
         }
 
         [Fact]
@@ -50,7 +51,8 @@
                 .WhenGetByOriginalUrlAsyncIsCalled()
                 .ConfigureAwait(true);
 
-            _steps.ThenTheShortenedUrlShouldBeReturned();
+            _steps
+                .ThenTheShortenedUrlShouldBeReturned();
         }
 
         [Fact]
@@ -61,7 +63,8 @@
                 .WhenGetByOriginalUrlAsyncIsCalled()
                 .ConfigureAwait(true);
 
-            _steps.ThenNullShouldBeReturned();
+            _steps
+                .ThenNullShouldBeReturned();
         }
     }
 }
