@@ -14,5 +14,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.IO.Hashing" Version="9.0.0" />
   </ItemGroup>
-
+	
+  <ItemGroup>
+	<InternalsVisibleTo Include="UrlShortener.Core.UnitTests" />
+  </ItemGroup>
 </Project>
