@@ -15,7 +15,7 @@
         private readonly Mock<Container> _containerMock = new Mock<Container>();
         private CosmosDbUrlRepository _repository;
         private ShortenedUrl _shortenedUrl;
-        private ShortenedUrl _result;
+        private ShortenedUrl? _result;
 
         public CosmosDbUrlRepositorySteps()
         {
@@ -24,16 +24,8 @@
 
         public CosmosDbUrlRepositorySteps GivenAValidShortenedUrl()
         {
-            _shortenedUrl = new ShortenedUrl("https://original.url", "shortUrl", DateTime.UtcNow, DateTime.UtcNow.AddDays(1));
-
-            var document = new ShortenedUrlDocument(
-                "shortUrl",
-                "shortUrl",
-                "https://original.url",
-                "shortUrl",
-                _shortenedUrl.CreatedAt,
-                _shortenedUrl.ExpiresAt,
-                DocumentType.ShortenedUrl);
+            _shortenedUrl = CreateShortenedUrl();
+            var document = ConvertToShortenedUrlDocument(_shortenedUrl);
 
             var responseMock = new Mock<ItemResponse<ShortenedUrlDocument>>();
             responseMock.Setup(r => r.Resource).Returns(document);
@@ -47,16 +39,9 @@
 
         public CosmosDbUrlRepositorySteps GivenAnExistingShortenedUrl()
         {
-            _shortenedUrl = new ShortenedUrl("https://original.url", "shortUrl", DateTime.UtcNow, DateTime.UtcNow.AddDays(1));
-            var document = new ShortenedUrlDocument(
-                "shortUrl",
-                "shortUrl",
-                "https://original.url",
-                "shortUrl",
-                _shortenedUrl.CreatedAt,
-                _shortenedUrl.ExpiresAt,
-                DocumentType.ShortenedUrl);
-            
+            _shortenedUrl = CreateShortenedUrl();
+            var document = ConvertToShortenedUrlDocument(_shortenedUrl);
+
             var responseMock = new Mock<ItemResponse<ShortenedUrlDocument>>();
             responseMock
                 .Setup(r => r.Resource)
@@ -80,9 +65,16 @@
 
         public CosmosDbUrlRepositorySteps GivenAnExistingShortenedUrlByOriginalUrl()
         {
-            _shortenedUrl = new ShortenedUrl("https://original.url", "shortUrl", DateTime.UtcNow, DateTime.UtcNow.AddDays(1));
-            var document = new ShortenedUrlDocument("shortUrl", "shortUrl", "https://original.url", "shortUrl", DateTime.UtcNow, DateTime.UtcNow.AddDays(1), DocumentType.ShortenedUrl);
-            
+            _shortenedUrl = CreateShortenedUrl();
+            var document = new ShortenedUrlDocument(
+                "bf40c5f1",
+                "bf40c5f1",
+                _shortenedUrl.OriginalUrl,
+                _shortenedUrl.ShortUrl,
+                _shortenedUrl.CreatedAt,
+                _shortenedUrl.ExpiresAt,
+                DocumentType.ShortenedUrl);
+
             var responseMock = new Mock<ItemResponse<ShortenedUrlDocument>>();
             responseMock
                 .Setup(r => r.Resource)
@@ -106,13 +98,13 @@
 
         public async Task<CosmosDbUrlRepositorySteps> WhenAddAsyncIsCalled()
         {
-            _result = await _repository.AddAsync(_shortenedUrl);
+            _result = await _repository.AddAsync(_shortenedUrl).ConfigureAwait(false);
             return this;
         }
 
         public async Task<CosmosDbUrlRepositorySteps> WhenGetAsyncIsCalled()
         {
-            _result = await _repository.GetAsync("shortUrl");
+            _result = await _repository.GetAsync("shortUrl").ConfigureAwait(false);
             return this;
         }
 
@@ -122,21 +114,43 @@
             return this;
         }
 
-        public void ThenTheShortenedUrlShouldBeAdded()
+        public CosmosDbUrlRepositorySteps ThenTheShortenedUrlShouldBeAdded()
         {
             _result.Should().NotBeNull();
             _result.Should().BeEquivalentTo(_shortenedUrl);
+            return this;
         }
 
-        public void ThenTheShortenedUrlShouldBeReturned()
+        public CosmosDbUrlRepositorySteps ThenTheShortenedUrlShouldBeReturned()
         {
             _result.Should().NotBeNull();
-            _result.ShortUrl.Should().Be(_shortenedUrl.ShortUrl);
+            _result.Should().BeEquivalentTo(_shortenedUrl);
+            return this;
         }
 
-        public void ThenNullShouldBeReturned()
+        public CosmosDbUrlRepositorySteps ThenNullShouldBeReturned()
         {
             _result.Should().BeNull();
+            return this;
+        }
+    
+        private static ShortenedUrl CreateShortenedUrl()
+        { 
+            return new ShortenedUrl("https://original.url", "shortUrl", DateTime.UtcNow, DateTime.UtcNow.AddDays(1));
+        }
+
+        private static ShortenedUrlDocument ConvertToShortenedUrlDocument(
+            ShortenedUrl shortenedUrl,
+            DocumentType documentType = DocumentType.ShortenedUrl)
+        {
+            return new ShortenedUrlDocument(
+                shortenedUrl.ShortUrl,
+                shortenedUrl.ShortUrl,
+                shortenedUrl.OriginalUrl,
+                shortenedUrl.ShortUrl,
+                shortenedUrl.CreatedAt,
+                shortenedUrl.ExpiresAt,
+                documentType);
         }
     }
 }
