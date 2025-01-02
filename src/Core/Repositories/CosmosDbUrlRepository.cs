@@ -1,6 +1,6 @@
 ﻿namespace UrlShortener.Core.Repositories
 {
-    using System.Security.Cryptography;
+    using System.IO.Hashing;
     using System.Text;
     using EnsureThat;
     using Microsoft.Azure.Cosmos;
@@ -82,7 +82,7 @@
 
             try
             {
-                var hashedOriginalUrl = ComputeSha256Hash(originalUrl);
+                var hashedOriginalUrl = ComputeCrc32Hash(originalUrl);
                 var response = await _container
                  .ReadItemAsync<ShortenedUrlDocument>(hashedOriginalUrl, new PartitionKey(hashedOriginalUrl))
                  .ConfigureAwait(false);
@@ -94,22 +94,28 @@
                 return null;
             }
 
-            string ComputeSha256Hash(string input)
+            static string ComputeCrc32Hash(string input)
             {
-                using (SHA256 sha256 = SHA256.Create())
+                // Check if the input is null or empty
+                if (string.IsNullOrEmpty(input))
                 {
-                    // Compute the hash as a byte array
-                    byte[] bytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(input));
-
-                    // Convert the byte array to a hexadecimal string
-                    StringBuilder builder = new StringBuilder();
-                    foreach (byte b in bytes)
-                    {
-                        builder.Append(b.ToString("x2"));
-                    }
-
-                    return builder.ToString();
+                    throw new ArgumentException("Input cannot be null or empty", nameof(input));
                 }
+
+                // Convert the input string to a byte array
+                byte[] bytes = Encoding.UTF8.GetBytes(input);
+
+                // Compute the CRC32 hash
+                byte[] hashBytes = Crc32.Hash(bytes);
+
+                // Convert the byte array to a hexadecimal string
+                StringBuilder builder = new StringBuilder();
+                foreach (byte b in hashBytes)
+                {
+                    builder.Append(b.ToString("x2"));
+                }
+
+                return builder.ToString();
             }
         }
 
