@@ -88,9 +88,12 @@
             return this;
         }
 
-        public UrlShortenerServiceSteps ThenTheResultShouldBe(ShortenedUrl expected)
+        public UrlShortenerServiceSteps ThenTheResultShouldBe(ShortenedUrl? expected)
         {
-            _result.Should().BeEquivalentTo(expected);
+            _result.Should().BeEquivalentTo(expected, options => options
+                .Using<DateTime>(ctx => ctx.Subject.Should().BeCloseTo(ctx.Expectation, TimeSpan.FromSeconds(1)))
+                .When(info => info.Path.EndsWith(nameof(ShortenedUrl.CreatedAt))));
+
             return this;
         }
 
