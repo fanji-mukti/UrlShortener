@@ -66,6 +66,7 @@
         public CosmosDbUrlRepositorySteps GivenAnExistingShortenedUrlByOriginalUrl()
         {
             _shortenedUrl = CreateShortenedUrl();
+            var ttl = CalculateTtl(_shortenedUrl.ExpiresAt);
             var document = new ShortenedUrlDocument(
                 "bf40c5f1",
                 "bf40c5f1",
@@ -73,7 +74,8 @@
                 _shortenedUrl.ShortUrl,
                 _shortenedUrl.CreatedAt,
                 _shortenedUrl.ExpiresAt,
-                DocumentType.ShortenedUrl);
+                DocumentType.ShortenedUrl,
+                ttl);
 
             var responseMock = new Mock<ItemResponse<ShortenedUrlDocument>>();
             responseMock
@@ -143,6 +145,7 @@
             ShortenedUrl shortenedUrl,
             DocumentType documentType = DocumentType.ShortenedUrl)
         {
+            var ttl = CalculateTtl(shortenedUrl.ExpiresAt);
             return new ShortenedUrlDocument(
                 shortenedUrl.ShortUrl,
                 shortenedUrl.ShortUrl,
@@ -150,7 +153,19 @@
                 shortenedUrl.ShortUrl,
                 shortenedUrl.CreatedAt,
                 shortenedUrl.ExpiresAt,
-                documentType);
+                documentType,
+                ttl);
+        }
+
+        private static int CalculateTtl(DateTime? expiresAt)
+        {
+            if (expiresAt == null)
+            {
+                return -1;
+            }
+
+            var ttl = (int)(expiresAt.Value - DateTime.UtcNow).TotalSeconds;
+            return ttl > 0 ? ttl : 0; // Ensure TTL is non-negative
         }
     }
 }

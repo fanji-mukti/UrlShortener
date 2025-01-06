@@ -32,6 +32,7 @@
         {
             EnsureArg.IsNotNull(shortenedUrl, nameof(shortenedUrl));
 
+            var ttl = CalculateTtl(shortenedUrl.ExpiresAt);
             var document = new ShortenedUrlDocument(
                 shortenedUrl.ShortUrl,
                 shortenedUrl.ShortUrl,
@@ -39,7 +40,8 @@
                 shortenedUrl.ShortUrl,
                 shortenedUrl.CreatedAt,
                 shortenedUrl.ExpiresAt,
-                DocumentType.ShortenedUrl);
+                DocumentType.ShortenedUrl,
+                ttl);
 
             var response = await _container
                 .CreateItemAsync(document, new PartitionKey(document.PartitionKey))
@@ -117,6 +119,17 @@
 
                 return builder.ToString();
             }
+        }
+
+        private static int CalculateTtl(DateTime? expiresAt)
+        {
+            if (expiresAt == null)
+            {
+                return -1;
+            }
+
+            var ttl = (int)(expiresAt.Value - DateTime.UtcNow).TotalSeconds;
+            return ttl > 0 ? ttl : 0; // Ensure TTL is non-negative
         }
 
         private static ShortenedUrl ConvertToShortenedUrl(ShortenedUrlDocument document)

@@ -17,6 +17,7 @@
         string ShortUrl,
         DateTime CreatedAt,
         DateTime? ExpiresAt,
-        DocumentType Type
+        DocumentType Type,
+        int ttl
     );
 }
