@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using UrlShortener.Core.Models;
     using UrlShortener.Core.Repositories;
+    using UrlShortener.Core.Utilities;
 
     /// <summary>
     /// Service for shortening URLs and retrieving original URLs.
@@ -13,16 +14,19 @@
     {
         private readonly IUrlRepository _urlRepository;
         private readonly IIdGenerator _idGenerator;
+        private readonly IEncoder _encoder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UrlShortenerService"/> class.
         /// </summary>
         /// <param name="urlRepository">The URL repository.</param>
         /// <param name="idGenerator">The ID generator.</param>
-        public UrlShortenerService(IUrlRepository urlRepository, IIdGenerator idGenerator)
+        /// <param name="encoder">The encoder of the id.</param>
+        public UrlShortenerService(IUrlRepository urlRepository, IIdGenerator idGenerator, IEncoder encoder)
         {
             _urlRepository = EnsureArg.IsNotNull(urlRepository, nameof(urlRepository));
             _idGenerator = EnsureArg.IsNotNull(idGenerator, nameof(idGenerator));
+            _encoder = EnsureArg.IsNotNull(encoder, nameof(encoder));
         }
 
         /// <summary>
@@ -42,7 +46,8 @@
                 return existingUrl;
             }
 
-            var shortUrl = _idGenerator.GenerateId().ToString();
+            var id = _idGenerator.GenerateId();
+            var shortUrl = _encoder.Encode(id);
             var shortenedUrl = new ShortenedUrl(originalUrl, shortUrl, DateTime.UtcNow, expiresAt);
 
             await _urlRepository.AddAsync(shortenedUrl).ConfigureAwait(false);
