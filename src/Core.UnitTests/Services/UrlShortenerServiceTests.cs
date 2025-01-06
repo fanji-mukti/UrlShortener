@@ -44,7 +44,7 @@
 
             _steps
                 .ThenTheResultShouldBe(expectedShortenedUrl)
-                .ThenTheRepositoryShouldHaveReceivedAddAsync();
+                .ThenTheShortenedUrlShouldBeAddedToRepository();
         }
 
         [Fact]

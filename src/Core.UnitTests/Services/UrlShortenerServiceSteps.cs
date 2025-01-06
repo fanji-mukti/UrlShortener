@@ -97,7 +97,7 @@
             return this;
         }
 
-        public UrlShortenerServiceSteps ThenTheRepositoryShouldHaveReceivedAddAsync()
+        public UrlShortenerServiceSteps ThenTheShortenedUrlShouldBeAddedToRepository()
         {
             _urlRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<ShortenedUrl>()), Times.Once);
             return this;
