@@ -22,6 +22,6 @@
         /// </summary>
         /// <param name="shortUrl">The short URL.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the original URL.</returns>
-        Task<ShortenedUrl> GetOriginalUrlAsync(string shortUrl);
+        Task<ShortenedUrl?> GetOriginalUrlAsync(string shortUrl);
     }
 }
