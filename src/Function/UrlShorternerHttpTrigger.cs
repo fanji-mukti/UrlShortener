@@ -1,10 +1,11 @@
-using System.Net;
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Logging;
-
 namespace Function
 {
+    using System.Net;
+    using Microsoft.Azure.Functions.Worker;
+    using Microsoft.Azure.Functions.Worker.Http;
+    using Microsoft.Extensions.Logging;
+    using UrlShortener.Function.DTOs;
+
     public class UrlShorternerHttpTrigger
     {
         private readonly ILogger _logger;
@@ -15,7 +16,9 @@ namespace Function
         }
 
         [Function("Function1")]
-        public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Anonymous, "get")] HttpRequestData req)
+        public HttpResponseData Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req,
+            [FromBody] ShortenUrlRequest shortenUrlRequest)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
