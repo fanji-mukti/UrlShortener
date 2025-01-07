@@ -2,7 +2,7 @@ namespace UrlShortener.Core.UnitTests.Utilities
 {
     using Xunit;
 
-    public class CustomBaseEncoderTests
+    public sealed class CustomBaseEncoderTests
     {
         private readonly CustomBaseEncoderSteps _steps = new CustomBaseEncoderSteps();
 

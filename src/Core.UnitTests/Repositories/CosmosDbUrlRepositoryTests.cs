@@ -3,7 +3,7 @@
     using System.Threading.Tasks;
     using Xunit;
 
-    public class CosmosDbUrlRepositoryTests
+    public sealed class CosmosDbUrlRepositoryTests
     {
         private readonly CosmosDbUrlRepositorySteps _steps = new CosmosDbUrlRepositorySteps();
 

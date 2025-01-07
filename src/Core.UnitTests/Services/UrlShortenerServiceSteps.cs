@@ -10,7 +10,7 @@
     using FluentAssertions;
     using Xunit;
 
-    public class UrlShortenerServiceSteps
+    internal sealed class UrlShortenerServiceSteps
     {
         private readonly Mock<IUrlRepository> _urlRepositoryMock = new Mock<IUrlRepository>();
         private readonly Mock<IIdGenerator> _idGeneratorMock = new Mock<IIdGenerator>();

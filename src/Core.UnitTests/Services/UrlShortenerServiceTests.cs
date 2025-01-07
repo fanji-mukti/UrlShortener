@@ -6,7 +6,7 @@
     using UrlShortener.Core.UnitTests.Steps;
     using Xunit;
 
-    public class UrlShortenerServiceTests
+    public sealed class UrlShortenerServiceTests
     {
         private readonly UrlShortenerServiceSteps _steps = new UrlShortenerServiceSteps();
 

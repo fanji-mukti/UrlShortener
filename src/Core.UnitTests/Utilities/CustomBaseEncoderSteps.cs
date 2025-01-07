@@ -3,7 +3,7 @@
     using FluentAssertions;
     using UrlShortener.Core.Utilities;
 
-    public class CustomBaseEncoderSteps
+    internal sealed class CustomBaseEncoderSteps
     {
         private CustomBaseEncoder _encoder;
         private long _number;

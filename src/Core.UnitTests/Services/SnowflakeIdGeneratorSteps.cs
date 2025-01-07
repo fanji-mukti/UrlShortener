@@ -4,7 +4,7 @@
     using Moq;
     using UrlShortener.Core.Services;
 
-    public sealed class SnowflakeIdGeneratorSteps
+    internal sealed class SnowflakeIdGeneratorSteps
     {
         
         private readonly Mock<ITimeProvider> _mockTimeProvider = new Mock<ITimeProvider>();
