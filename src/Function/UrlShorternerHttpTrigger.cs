@@ -1,10 +1,11 @@
 namespace Function
 {
-    using System.Net;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Functions.Worker;
     using Microsoft.Azure.Functions.Worker.Http;
     using Microsoft.Extensions.Logging;
     using UrlShortener.Function.DTOs;
+    using FromBodyAttribute = Microsoft.Azure.Functions.Worker.Http.FromBodyAttribute;
 
     public class UrlShorternerHttpTrigger
     {
@@ -16,18 +17,13 @@ namespace Function
         }
 
         [Function("Function1")]
-        public HttpResponseData Run(
+        public IActionResult Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req,
             [FromBody] ShortenUrlRequest shortenUrlRequest)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");
 
-            var response = req.CreateResponse(HttpStatusCode.OK);
-            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-
-            response.WriteString("Welcome to Azure Functions!");
-
-            return response;
+            return new OkObjectResult(new ShortenedUrlResponse { OriginalUrl = shortenUrlRequest.OriginalUrl, CreatedAt = DateTime.UtcNow });
         }
     }
 }
