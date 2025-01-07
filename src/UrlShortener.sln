@@ -5,11 +5,13 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi\WebApi.csproj", "{C8EAAF23-FC4D-4EB8-AA67-6AB6CC154F9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "Core\Core.csproj", "{A35B864C-13BD-4599-A52F-E9F541B4BAB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core", "Core\Core.csproj", "{A35B864C-13BD-4599-A52F-E9F541B4BAB4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CB7037B8-3312-4AE8-ACE6-734F6A2BD8B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.UnitTests", "Core.UnitTests\Core.UnitTests.csproj", "{4CE490DD-E9AE-4448-9543-3207FEFFEF81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.UnitTests", "Core.UnitTests\Core.UnitTests.csproj", "{4CE490DD-E9AE-4448-9543-3207FEFFEF81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Function", "Function\Function.csproj", "{62F403EF-4C58-4F49-A1EF-207EE20BA6DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +31,10 @@ Global
 		{4CE490DD-E9AE-4448-9543-3207FEFFEF81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CE490DD-E9AE-4448-9543-3207FEFFEF81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CE490DD-E9AE-4448-9543-3207FEFFEF81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62F403EF-4C58-4F49-A1EF-207EE20BA6DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62F403EF-4C58-4F49-A1EF-207EE20BA6DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62F403EF-4C58-4F49-A1EF-207EE20BA6DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62F403EF-4C58-4F49-A1EF-207EE20BA6DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
