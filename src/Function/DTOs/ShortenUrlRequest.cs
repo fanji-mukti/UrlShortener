@@ -1,5 +1,7 @@
 ﻿namespace UrlShortener.Function.DTOs
 {
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
     /// Represents the request to shorten a URL.
     /// </summary>
@@ -9,6 +11,8 @@
         /// Gets or sets the original URL.
         /// </summary>
         /// <value>The original URL to be shortened.</value>
+        [Required]
+        [Url]
         public string OriginalUrl { get; set; }
 
         /// <summary>
