@@ -36,5 +36,22 @@ namespace Function
 
             return new OkObjectResult(response);
         }
+
+        [Function("shortUrlV1")]
+        public async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/{shortUrl}")] HttpRequestData req,
+            [FromRoute] string shortUrl)
+        { 
+            var shortenedUrl = await _urlShortenerService
+                .GetOriginalUrlAsync(shortUrl)
+                .ConfigureAwait(false);
+
+            if (shortenedUrl == null)
+            { 
+                return new NotFoundResult();
+            }
+
+            return new RedirectResult(shortenedUrl.OriginalUrl);
+        }
     }
 }
