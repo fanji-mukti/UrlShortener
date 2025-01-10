@@ -1,29 +1,40 @@
 namespace Function
 {
+    using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Functions.Worker;
     using Microsoft.Azure.Functions.Worker.Http;
-    using Microsoft.Extensions.Logging;
+    using UrlShortener.Core.Services;
     using UrlShortener.Function.DTOs;
     using FromBodyAttribute = Microsoft.Azure.Functions.Worker.Http.FromBodyAttribute;
 
     public class UrlShorternerHttpTrigger
     {
-        private readonly ILogger _logger;
+        private readonly IUrlShortenerService _urlShortenerService;
 
-        public UrlShorternerHttpTrigger(ILoggerFactory loggerFactory)
+        public UrlShorternerHttpTrigger(IUrlShortenerService urlShortenerService)
         {
-            _logger = loggerFactory.CreateLogger<UrlShorternerHttpTrigger>();
+            _urlShortenerService = EnsureArg.IsNotNull(urlShortenerService, nameof(urlShortenerService));
         }
 
-        [Function("Function1")]
-        public IActionResult Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post")] HttpRequestData req,
+        [Function("ShortenUrlV1")]
+        public async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/data/shorten")] HttpRequestData req,
             [FromBody] ShortenUrlRequest shortenUrlRequest)
         {
-            _logger.LogInformation("C# HTTP trigger function processed a request.");
+            var shortenedUrl = await _urlShortenerService
+                .ShortenUrlAsync(shortenUrlRequest.OriginalUrl, shortenUrlRequest.ExpiresAt)
+                .ConfigureAwait(false);
 
-            return new OkObjectResult(new ShortenedUrlResponse { OriginalUrl = shortenUrlRequest.OriginalUrl, CreatedAt = DateTime.UtcNow });
+            var response = new ShortenedUrlResponse
+            {
+                OriginalUrl = shortenedUrl.OriginalUrl,
+                ShortUrl = shortenedUrl.ShortUrl,
+                CreatedAt = shortenedUrl.CreatedAt,
+                ExpiresAt = shortenedUrl.ExpiresAt,
+            };
+
+            return new OkObjectResult(response);
         }
     }
 }
