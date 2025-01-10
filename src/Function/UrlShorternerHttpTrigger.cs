@@ -4,6 +4,7 @@ namespace Function
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Functions.Worker;
     using Microsoft.Azure.Functions.Worker.Http;
+    using System.ComponentModel.DataAnnotations;
     using UrlShortener.Core.Services;
     using UrlShortener.Function.DTOs;
     using FromBodyAttribute = Microsoft.Azure.Functions.Worker.Http.FromBodyAttribute;
@@ -22,6 +23,11 @@ namespace Function
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/data/shorten")] HttpRequestData req,
             [FromBody] ShortenUrlRequest shortenUrlRequest)
         {
+            if (!TryValidateModel(shortenUrlRequest, out var validationResults))
+            {
+                 return new BadRequestObjectResult(validationResults);
+            }
+
             var shortenedUrl = await _urlShortenerService
                 .ShortenUrlAsync(shortenUrlRequest.OriginalUrl, shortenUrlRequest.ExpiresAt)
                 .ConfigureAwait(false);
@@ -35,6 +41,13 @@ namespace Function
             };
 
             return new OkObjectResult(response);
+
+            bool TryValidateModel(object model, out List<ValidationResult> results)
+            {
+                var context = new ValidationContext(model, serviceProvider: null, items: null);
+                results = new List<ValidationResult>();
+                return Validator.TryValidateObject(model, context, results, validateAllProperties: true);
+            }
         }
 
         [Function("shortUrlV1")]
