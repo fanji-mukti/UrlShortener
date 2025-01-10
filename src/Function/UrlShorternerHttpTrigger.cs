@@ -1,5 +1,6 @@
 namespace Function
 {
+    using AutoMapper;
     using EnsureThat;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Azure.Functions.Worker;
@@ -12,10 +13,12 @@ namespace Function
     public class UrlShorternerHttpTrigger
     {
         private readonly IUrlShortenerService _urlShortenerService;
+        private readonly IMapper _mapper;
 
-        public UrlShorternerHttpTrigger(IUrlShortenerService urlShortenerService)
+        public UrlShorternerHttpTrigger(IUrlShortenerService urlShortenerService, IMapper mapper)
         {
             _urlShortenerService = EnsureArg.IsNotNull(urlShortenerService, nameof(urlShortenerService));
+            _mapper = EnsureArg.IsNotNull(mapper, nameof(mapper));
         }
 
         [Function("ShortenUrlV1")]
@@ -32,13 +35,7 @@ namespace Function
                 .ShortenUrlAsync(shortenUrlRequest.OriginalUrl, shortenUrlRequest.ExpiresAt)
                 .ConfigureAwait(false);
 
-            var response = new ShortenedUrlResponse
-            {
-                OriginalUrl = shortenedUrl.OriginalUrl,
-                ShortUrl = shortenedUrl.ShortUrl,
-                CreatedAt = shortenedUrl.CreatedAt,
-                ExpiresAt = shortenedUrl.ExpiresAt,
-            };
+            var response = _mapper.Map<ShortenedUrlResponse>(shortenedUrl);
 
             return new OkObjectResult(response);
 
