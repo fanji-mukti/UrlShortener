@@ -6,6 +6,8 @@
         "CosmosDb.ConnectionString":"{replace me or use keyvault reference}",
         "CosmosDb.ConnectionMode": "Direct",
         "CosmosDb.DatabaseName": "ToDoList",
-        "CosmosDb.ContainerName": "ToDoList"
+        "CosmosDb.ContainerName": "ToDoList",
+        "UrlShortener.DataCenterId": "1",
+        "UrlShortener.WorkerId": "1"
     }
 }

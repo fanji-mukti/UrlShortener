@@ -17,9 +17,11 @@ var host = new HostBuilder()
     .ConfigureContainer<ContainerBuilder>(builder =>
     {
         var cosmosDbConfig = Configuration.GetCosmosDbConfiguration();
+        var urlShortenerServiceConfig = Configuration.GetUrlShortenerServiceConfiguration();
 
         builder
-            .RegisterModule(new RepositoryModule(cosmosDbConfig));
+            .RegisterModule(new RepositoryModule(cosmosDbConfig))
+            .RegisterModule(new UrlShortenerServiceModule(urlShortenerServiceConfig));
     })
     .Build();
 
