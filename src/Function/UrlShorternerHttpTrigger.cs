@@ -67,9 +67,9 @@ namespace Function
         /// <param name="req">The HTTP request data.</param>
         /// <param name="shortUrl">The shortened URL.</param>
         /// <returns>An <see cref="IActionResult"/> that redirects to the original URL or a 404 Not Found result.</returns>
-        [Function("shortUrlV1")]
+        [Function("UrlRedirect")]
         public async Task<IActionResult> ShortUrlAsync(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/{shortUrl}")] HttpRequestData req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "{shortUrl}")] HttpRequestData req,
             [FromRoute] string shortUrl)
         {
             var shortenedUrl = await _urlShortenerService
