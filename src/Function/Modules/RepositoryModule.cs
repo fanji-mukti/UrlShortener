@@ -37,10 +37,16 @@
                 .Register(context =>
                 {
                     var config = context.Resolve<CosmosDbConfiguration>();
-                    var client = new CosmosClient(config.ConnectionString, new CosmosClientOptions
+                    var cosmosClientOptions = new CosmosClientOptions
                     {
+                        SerializerOptions = new CosmosSerializationOptions
+                        {
+                            PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase
+                        },
                         ConnectionMode = (ConnectionMode)Enum.Parse(typeof(ConnectionMode), config.ConnectionMode),
-                    });
+                    };
+
+                    var client = new CosmosClient(config.ConnectionString, cosmosClientOptions);
 
                     return client;
                 })
