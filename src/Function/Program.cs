@@ -4,6 +4,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using UrlShortener.Function.Configurations;
+using UrlShortener.Function.MappingProfiles;
 using UrlShortener.Function.Modules;
 
 var host = new HostBuilder()
@@ -13,6 +14,7 @@ var host = new HostBuilder()
     {
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
+        services.AddAutoMapper(typeof(ShortenedUrlProfile).Assembly);
     })
     .ConfigureContainer<ContainerBuilder>(builder =>
     {
