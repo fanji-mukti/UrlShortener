@@ -36,7 +36,7 @@ namespace Function
         /// <param name="shortenUrlRequest">The request body containing the URL to be shortened.</param>
         /// <returns>An <see cref="IActionResult"/> containing the shortened URL response.</returns>
         [Function("ShortenUrlV1")]
-        public async Task<IActionResult> Run(
+        public async Task<IActionResult> ShortenUrlAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "v1/data/shorten")] HttpRequestData req,
             [FromBody] ShortenUrlRequest shortenUrlRequest)
         {
@@ -68,7 +68,7 @@ namespace Function
         /// <param name="shortUrl">The shortened URL.</param>
         /// <returns>An <see cref="IActionResult"/> that redirects to the original URL or a 404 Not Found result.</returns>
         [Function("shortUrlV1")]
-        public async Task<IActionResult> Run(
+        public async Task<IActionResult> ShortUrlAsync(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "v1/{shortUrl}")] HttpRequestData req,
             [FromRoute] string shortUrl)
         {

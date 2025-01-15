@@ -26,7 +26,7 @@
             set
             {
                 _secureConnectionString?.Dispose();
-                _secureConnectionString = new NetworkCredential(string.Empty, new SecureString()).SecurePassword;
+                _secureConnectionString = new NetworkCredential(string.Empty, value).SecurePassword;
             }
         }
 
