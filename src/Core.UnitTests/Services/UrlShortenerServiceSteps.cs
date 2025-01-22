@@ -22,9 +22,9 @@
         private ShortenedUrl? _result;
         private Exception _exception;
 
-        public UrlShortenerServiceSteps GivenAUrlShortenerService()
+        public UrlShortenerServiceSteps GivenAUrlShortenerService(string baseAddress = "https://example-base-address.com")
         {
-            _service = new UrlShortenerService(_urlRepositoryMock.Object, _idGeneratorMock.Object, _encoderMock.Object);
+            _service = new UrlShortenerService(_urlRepositoryMock.Object, _idGeneratorMock.Object, _encoderMock.Object, baseAddress);
             return this;
         }
 

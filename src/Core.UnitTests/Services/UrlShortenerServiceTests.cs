@@ -29,10 +29,11 @@
         [Fact]
         public async Task ShortenUrlAsync_ShouldGenerateNewShortenedUrl_WhenUrlDoesNotExist()
         {
+            var urlShortenerServiceBaseAddress = "https://example-base-address.com";
             var originalUrl = "https://example.com";
-            var shortUrl = "abc123";
+            var shortUrl = $"abc123";
             var expiresAt = DateTime.UtcNow.AddDays(30);
-            var expectedShortenedUrl = new ShortenedUrl(originalUrl, shortUrl, DateTime.UtcNow, expiresAt);
+            var expectedShortenedUrl = new ShortenedUrl(originalUrl, $"{urlShortenerServiceBaseAddress}/{shortUrl}", DateTime.UtcNow, expiresAt);
 
            _steps
                 .GivenAUrlShortenerService()

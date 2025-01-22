@@ -15,6 +15,7 @@
         private readonly IUrlRepository _urlRepository;
         private readonly IIdGenerator _idGenerator;
         private readonly IEncoder _encoder;
+        private readonly string _baseAddress;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UrlShortenerService"/> class.
@@ -22,11 +23,16 @@
         /// <param name="urlRepository">The URL repository.</param>
         /// <param name="idGenerator">The ID generator.</param>
         /// <param name="encoder">The encoder of the id.</param>
-        public UrlShortenerService(IUrlRepository urlRepository, IIdGenerator idGenerator, IEncoder encoder)
+        public UrlShortenerService(
+            IUrlRepository urlRepository,
+            IIdGenerator idGenerator,
+            IEncoder encoder,
+            string baseAddress)
         {
             _urlRepository = EnsureArg.IsNotNull(urlRepository, nameof(urlRepository));
             _idGenerator = EnsureArg.IsNotNull(idGenerator, nameof(idGenerator));
             _encoder = EnsureArg.IsNotNull(encoder, nameof(encoder));
+            _baseAddress = EnsureArg.IsNotNullOrWhiteSpace(baseAddress, nameof(baseAddress));
         }
 
         /// <summary>
@@ -52,7 +58,16 @@
 
             await _urlRepository.AddAsync(shortenedUrl).ConfigureAwait(false);
 
-            return shortenedUrl;
+            return AppendBaseAddress(shortenedUrl);
+
+            ShortenedUrl AppendBaseAddress(ShortenedUrl original)
+            {
+                return new ShortenedUrl(
+                    original.OriginalUrl,
+                    $"{_baseAddress}/{original.ShortUrl}",
+                    original.CreatedAt,
+                    original.ExpiresAt);
+            }
         }
 
         /// <summary>
