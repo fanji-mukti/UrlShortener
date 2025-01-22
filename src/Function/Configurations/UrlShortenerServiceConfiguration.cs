@@ -6,6 +6,11 @@
     public sealed class UrlShortenerServiceConfiguration
     {
         /// <summary>
+        /// Gets or sets the base URL for the shortened URLs.
+        /// </summary>
+        public string BaseUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets the data center identifier.
         /// </summary>
         /// <value>

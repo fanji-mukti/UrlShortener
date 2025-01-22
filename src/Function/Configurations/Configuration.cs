@@ -27,6 +27,7 @@
         {
             return new UrlShortenerServiceConfiguration
             {
+                BaseUrl = GetValue("UrlShortener.BaseUrl"),
                 DataCenterId = GetIntValue("UrlShortener.DataCenterId"),
                 WorkerId = GetIntValue("UrlShortener.WorkerId"),
             };

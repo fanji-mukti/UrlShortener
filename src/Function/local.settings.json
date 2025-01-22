@@ -7,6 +7,7 @@
     "CosmosDb.ConnectionMode": "Direct",
     "CosmosDb.DatabaseName": "UrlShortenerStore",
     "CosmosDb.ContainerName": "ShortenedUrl",
+    "UrlShortener.BaseUrl": "http://localhost:7110/api",
     "UrlShortener.DataCenterId": "1",
     "UrlShortener.WorkerId": "1"
   }

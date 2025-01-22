@@ -1,9 +1,11 @@
-﻿namespace UrlShortener.Function.Configurations
+﻿namespace UrlShortener.Function.Modules
 {
     using Autofac;
     using EnsureThat;
+    using UrlShortener.Core.Repositories;
     using UrlShortener.Core.Services;
     using UrlShortener.Core.Utilities;
+    using UrlShortener.Function.Configurations;
 
     /// <summary>
     /// Represents a module for registering URL shortener service dependencies in the Autofac container.
@@ -43,7 +45,12 @@
                 .SingleInstance();
 
             builder
-                .RegisterType<UrlShortenerService>()
+                .Register<UrlShortenerService>(
+                    context => new UrlShortenerService(
+                        context.Resolve<IUrlRepository>(),
+                        context.Resolve<IIdGenerator>(),
+                        context.Resolve<IEncoder>(),
+                        _configuration.BaseUrl))
                 .As<IUrlShortenerService>()
                 .InstancePerDependency();
         }
