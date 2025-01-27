@@ -8,7 +8,7 @@ using UrlShortener.Function.MappingProfiles;
 using UrlShortener.Function.Modules;
 
 var host = new HostBuilder()
-    .ConfigureFunctionsWorkerDefaults()
+    .ConfigureFunctionsWebApplication()
     .UseServiceProviderFactory(new AutofacServiceProviderFactory())
     .ConfigureServices(services =>
     {
