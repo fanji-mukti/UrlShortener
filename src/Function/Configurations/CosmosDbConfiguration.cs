@@ -39,22 +39,6 @@
         public required string ConnectionMode { get; set; }
 
         /// <summary>
-        /// Gets or sets the name of the database in the Cosmos DB instance.
-        /// </summary>
-        /// <value>
-        /// The name of the database in the Cosmos DB instance.
-        /// </value>
-        public required string DatabaseName { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the container in the Cosmos DB instance.
-        /// </summary>
-        /// <value>
-        /// The name of the container in the Cosmos DB instance.
-        /// </value>
-        public required string ContainerName { get; set; }
-
-        /// <summary>
         /// Releases all resources used by the <see cref="CosmosDbConfiguration"/> class.
         /// </summary>
         public void Dispose()

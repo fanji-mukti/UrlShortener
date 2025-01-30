@@ -18,8 +18,6 @@
             {
                 ConnectionString = GetValue("CosmosDb.ConnectionString"),
                 ConnectionMode = GetValue("CosmosDb.ConnectionMode"),
-                DatabaseName = GetValue("CosmosDb.DatabaseName"),
-                ContainerName = GetValue("CosmosDb.ContainerName"),
             };
         }
 

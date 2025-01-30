@@ -53,14 +53,7 @@
                 .SingleInstance();
 
             builder
-                .Register(context =>
-                {
-                    var config = context.Resolve<CosmosDbConfiguration>();
-                    var client = context.Resolve<CosmosClient>();
-                    var container = client.GetContainer(config.DatabaseName, config.ContainerName);
-
-                    return new CosmosDbUrlRepository(container);
-                })
+                .RegisterType<CosmosDbUrlRepository>()
                 .As<IUrlRepository>()
                 .SingleInstance();
         }

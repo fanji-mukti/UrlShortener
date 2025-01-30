@@ -12,14 +12,31 @@
 
     internal sealed class CosmosDbUrlRepositorySteps
     {
-        private readonly Mock<Container> _containerMock = new Mock<Container>();
+        private readonly Mock<Container> _shortenedUrlcontainerMock = new Mock<Container>();
+        private readonly Mock<Container> _originalUrlcontainerMock = new Mock<Container>();
         private CosmosDbUrlRepository _repository;
         private ShortenedUrl _shortenedUrl;
         private ShortenedUrl? _result;
 
         public CosmosDbUrlRepositorySteps()
         {
-            _repository = new CosmosDbUrlRepository(_containerMock.Object);
+            const string databaseName = "UrlShortenerStore";
+            const string shortenedUrlContainerName = "ShortenedUrl";
+            const string originalUrlContainerName = "OriginalUrl";
+
+            var mockClient = new Mock<CosmosClient>();
+
+            var a = mockClient.Object;
+
+            mockClient
+                .Setup(c => c.GetContainer(databaseName, shortenedUrlContainerName))
+                .Returns(_shortenedUrlcontainerMock.Object);
+
+            mockClient
+                .Setup(c => c.GetContainer(databaseName, originalUrlContainerName))
+                .Returns(_originalUrlcontainerMock.Object);
+
+            _repository = new CosmosDbUrlRepository(mockClient.Object);
         }
 
         public CosmosDbUrlRepositorySteps GivenAValidShortenedUrl()
@@ -30,7 +47,7 @@
             var responseMock = new Mock<ItemResponse<ShortenedUrlDocument>>();
             responseMock.Setup(r => r.Resource).Returns(document);
 
-            _containerMock
+            _shortenedUrlcontainerMock
                 .Setup(c => c.CreateItemAsync(It.IsAny<ShortenedUrlDocument>(), It.IsAny<PartitionKey>(), null, default))
                 .ReturnsAsync(responseMock.Object);
             
@@ -47,7 +64,7 @@
                 .Setup(r => r.Resource)
                 .Returns(document);
 
-            _containerMock
+            _shortenedUrlcontainerMock
                 .Setup(c => c.ReadItemAsync<ShortenedUrlDocument>("shortUrl", new PartitionKey("shortUrl"), null, default))
                 .ReturnsAsync(responseMock.Object);
 
@@ -56,7 +73,7 @@
 
         public CosmosDbUrlRepositorySteps GivenANonExistingShortenedUrl()
         {
-            _containerMock
+            _shortenedUrlcontainerMock
                 .Setup(c => c.ReadItemAsync<ShortenedUrlDocument>("shortUrl", new PartitionKey("shortUrl"), null, default))
                 .ThrowsAsync(new CosmosException("Not Found", System.Net.HttpStatusCode.NotFound, 0, "", 0));
 
@@ -82,7 +99,7 @@
                 .Setup(r => r.Resource)
                 .Returns(document);
 
-            _containerMock
+            _shortenedUrlcontainerMock
                 .Setup(c => c.ReadItemAsync<ShortenedUrlDocument>(It.IsAny<string>(), It.IsAny<PartitionKey>(), null, default))
                 .ReturnsAsync(responseMock.Object);
 
@@ -91,7 +108,7 @@
 
         public CosmosDbUrlRepositorySteps GivenANonExistingShortenedUrlByOriginalUrl()
         {
-            _containerMock
+            _shortenedUrlcontainerMock
                 .Setup(c => c.ReadItemAsync<ShortenedUrlDocument>(It.IsAny<string>(), It.IsAny<PartitionKey>(), null, default))
                 .ThrowsAsync(new CosmosException("Not Found", System.Net.HttpStatusCode.NotFound, 0, "", 0));
 

@@ -12,15 +12,23 @@
     /// </summary>
     public sealed class CosmosDbUrlRepository : IUrlRepository
     {
-        private readonly Container _container;
+        private readonly Container _shortenedUrlContainer;
+        private readonly Container _originalUrlContainer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UrlRepository"/> class.
         /// </summary>
-        /// <param name="container">The <see cref="Container"/>.</param>
-        public CosmosDbUrlRepository(Container container)
+        /// <param name="cosmosClient">The <see cref="CosmosClient"/>.</param>
+        public CosmosDbUrlRepository(CosmosClient cosmosClient)
         {
-            _container = EnsureArg.IsNotNull(container, nameof(container));
+            EnsureArg.IsNotNull(cosmosClient, nameof(cosmosClient));
+
+            const string databaseName = "UrlShortenerStore";
+            const string shortenedUrlContainerName = "ShortenedUrl";
+            const string originalUrlContainerName = "OriginalUrl";
+
+            _shortenedUrlContainer = cosmosClient.GetContainer(databaseName, shortenedUrlContainerName);
+            _originalUrlContainer = cosmosClient.GetContainer(databaseName, originalUrlContainerName);
         }
 
         /// <summary>
@@ -43,7 +51,7 @@
                 DocumentType.ShortenedUrl,
                 ttl);
 
-            var response = await _container
+            var response = await _shortenedUrlContainer
                 .CreateItemAsync(document, new PartitionKey(document.PartitionKey))
                 .ConfigureAwait(false);
 
@@ -61,7 +69,7 @@
 
             try
             {
-                var response = await _container
+                var response = await _shortenedUrlContainer
                  .ReadItemAsync<ShortenedUrlDocument>(shortUrl, new PartitionKey(shortUrl))
                  .ConfigureAwait(false);
 
@@ -85,7 +93,7 @@
             try
             {
                 var hashedOriginalUrl = ComputeCrc32Hash(originalUrl);
-                var response = await _container
+                var response = await _shortenedUrlContainer
                  .ReadItemAsync<ShortenedUrlDocument>(hashedOriginalUrl, new PartitionKey(hashedOriginalUrl))
                  .ConfigureAwait(false);
 
