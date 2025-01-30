@@ -91,7 +91,6 @@
                 _shortenedUrl.ShortUrl,
                 _shortenedUrl.CreatedAt,
                 _shortenedUrl.ExpiresAt,
-                DocumentType.ShortenedUrl,
                 ttl);
 
             var responseMock = new Mock<ItemResponse<ShortenedUrlDocument>>();
@@ -158,9 +157,7 @@
             return new ShortenedUrl("https://original.url", "shortUrl", DateTime.UtcNow, DateTime.UtcNow.AddDays(1));
         }
 
-        private static ShortenedUrlDocument ConvertToShortenedUrlDocument(
-            ShortenedUrl shortenedUrl,
-            DocumentType documentType = DocumentType.ShortenedUrl)
+        private static ShortenedUrlDocument ConvertToShortenedUrlDocument(ShortenedUrl shortenedUrl)
         {
             var ttl = CalculateTtl(shortenedUrl.ExpiresAt);
             return new ShortenedUrlDocument(
@@ -170,7 +167,6 @@
                 shortenedUrl.ShortUrl,
                 shortenedUrl.CreatedAt,
                 shortenedUrl.ExpiresAt,
-                documentType,
                 ttl);
         }
 

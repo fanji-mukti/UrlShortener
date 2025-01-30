@@ -25,7 +25,6 @@
             }
 
             var output = shortenedUrlDocuments
-                .Where(d => d.Type == DocumentType.ShortenedUrl)
                 .Select(ToOriginalUrlDocument)
                 .ToList();
 
@@ -40,7 +39,6 @@
                     shortenedUrlDocument.ShortUrl,
                     shortenedUrlDocument.CreatedAt,
                     shortenedUrlDocument.ExpiresAt,
-                    DocumentType.OriginalUrl,
                     shortenedUrlDocument.ttl
                 );
             }
@@ -53,7 +51,6 @@
             string shortUrl,
             DateTime createdAt,
             DateTime? expiresAt,
-            DocumentType type,
             int ttl
             );
     }

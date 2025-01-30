@@ -48,7 +48,6 @@
                 shortenedUrl.ShortUrl,
                 shortenedUrl.CreatedAt,
                 shortenedUrl.ExpiresAt,
-                DocumentType.ShortenedUrl,
                 ttl);
 
             var response = await _shortenedUrlContainer
