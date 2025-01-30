@@ -58,6 +58,33 @@
         }
 
         /// <summary>
+        /// Adds a new shortened URL to the lookup table.
+        /// </summary>
+        /// <param name="shortenedUrl">The shortened URL to add.</param>
+        /// <returns>The added shortened URL.</returns>
+        public async Task<ShortenedUrl> AddToLookupAsync(ShortenedUrl shortenedUrl)
+        {
+            EnsureArg.IsNotNull(shortenedUrl, nameof(shortenedUrl));
+
+            var hashedOriginalUrl = ComputeCrc32Hash(shortenedUrl.OriginalUrl);
+            var ttl = CalculateTtl(shortenedUrl.ExpiresAt);
+            var document = new ShortenedUrlDocument(
+                hashedOriginalUrl,
+                hashedOriginalUrl,
+                shortenedUrl.OriginalUrl,
+                shortenedUrl.ShortUrl,
+                shortenedUrl.CreatedAt,
+                shortenedUrl.ExpiresAt,
+                ttl);
+
+            var response = await _originalUrlContainer
+                .CreateItemAsync(document, new PartitionKey(document.PartitionKey))
+                .ConfigureAwait(false);
+
+            return ConvertToShortenedUrl(response.Resource);
+        }
+
+        /// <summary>
         /// Retrieves a shortened URL from the repository by its short URL.
         /// </summary>
         /// <param name="shortUrl">The short URL to retrieve.</param>
@@ -92,7 +119,7 @@
             try
             {
                 var hashedOriginalUrl = ComputeCrc32Hash(originalUrl);
-                var response = await _shortenedUrlContainer
+                var response = await _originalUrlContainer
                  .ReadItemAsync<ShortenedUrlDocument>(hashedOriginalUrl, new PartitionKey(hashedOriginalUrl))
                  .ConfigureAwait(false);
 
@@ -102,30 +129,30 @@
             {
                 return null;
             }
+        }
 
-            static string ComputeCrc32Hash(string input)
+        private static string ComputeCrc32Hash(string input)
+        {
+            // Check if the input is null or empty
+            if (string.IsNullOrEmpty(input))
             {
-                // Check if the input is null or empty
-                if (string.IsNullOrEmpty(input))
-                {
-                    throw new ArgumentException("Input cannot be null or empty", nameof(input));
-                }
-
-                // Convert the input string to a byte array
-                byte[] bytes = Encoding.UTF8.GetBytes(input);
-
-                // Compute the CRC32 hash
-                byte[] hashBytes = Crc32.Hash(bytes);
-
-                // Convert the byte array to a hexadecimal string
-                StringBuilder builder = new StringBuilder();
-                foreach (byte b in hashBytes)
-                {
-                    builder.Append(b.ToString("x2"));
-                }
-
-                return builder.ToString();
+                throw new ArgumentException("Input cannot be null or empty", nameof(input));
             }
+
+            // Convert the input string to a byte array
+            byte[] bytes = Encoding.UTF8.GetBytes(input);
+
+            // Compute the CRC32 hash
+            byte[] hashBytes = Crc32.Hash(bytes);
+
+            // Convert the byte array to a hexadecimal string
+            StringBuilder builder = new StringBuilder();
+            foreach (byte b in hashBytes)
+            {
+                builder.Append(b.ToString("x2"));
+            }
+
+            return builder.ToString();
         }
 
         private static int CalculateTtl(DateTime? expiresAt)

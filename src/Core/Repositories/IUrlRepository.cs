@@ -15,6 +15,13 @@
         Task<ShortenedUrl> AddAsync(ShortenedUrl shortenedUrl);
 
         /// <summary>
+        /// Adds a new shortened URL to the lookup table.
+        /// </summary>
+        /// <param name="shortenedUrl">The shortened URL to add.</param>
+        /// <returns>The added shortened URL.</returns>
+        Task<ShortenedUrl> AddToLookupAsync(ShortenedUrl shortenedUrl);
+
+        /// <summary>
         /// Retrieves a shortened URL from the repository by its short URL.
         /// </summary>
         /// <param name="shortUrl">The short URL to retrieve.</param>

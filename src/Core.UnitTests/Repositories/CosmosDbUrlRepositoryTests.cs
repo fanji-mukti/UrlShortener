@@ -20,6 +20,18 @@
         }
 
         [Fact]
+        public async Task AddToLookupAsync_ShouldAddShortenedUrlToLookupTable()
+        {
+            await _steps
+                .GivenAValidShortenedUrlInLookupTable()
+                .WhenAddToLookupAsyncIsCalled()
+                .ConfigureAwait(true);
+
+            _steps
+                .ThenTheShortenedUrlShouldBeAdded();
+        }
+
+        [Fact]
         public async Task GetAsync_ShouldReturnShortenedUrl_WhenUrlExists()
         {
             await _steps

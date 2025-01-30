@@ -54,6 +54,21 @@
                 return this;
         }
 
+        public CosmosDbUrlRepositorySteps GivenAValidShortenedUrlInLookupTable()
+        {
+            _shortenedUrl = CreateShortenedUrl();
+            var document = ConvertToShortenedUrlDocument(_shortenedUrl);
+
+            var responseMock = new Mock<ItemResponse<ShortenedUrlDocument>>();
+            responseMock.Setup(r => r.Resource).Returns(document);
+
+            _originalUrlcontainerMock
+                .Setup(c => c.CreateItemAsync(It.IsAny<ShortenedUrlDocument>(), It.IsAny<PartitionKey>(), null, default))
+                .ReturnsAsync(responseMock.Object);
+
+            return this;
+        }
+
         public CosmosDbUrlRepositorySteps GivenAnExistingShortenedUrl()
         {
             _shortenedUrl = CreateShortenedUrl();
@@ -98,7 +113,7 @@
                 .Setup(r => r.Resource)
                 .Returns(document);
 
-            _shortenedUrlcontainerMock
+            _originalUrlcontainerMock
                 .Setup(c => c.ReadItemAsync<ShortenedUrlDocument>(It.IsAny<string>(), It.IsAny<PartitionKey>(), null, default))
                 .ReturnsAsync(responseMock.Object);
 
@@ -107,7 +122,7 @@
 
         public CosmosDbUrlRepositorySteps GivenANonExistingShortenedUrlByOriginalUrl()
         {
-            _shortenedUrlcontainerMock
+            _originalUrlcontainerMock
                 .Setup(c => c.ReadItemAsync<ShortenedUrlDocument>(It.IsAny<string>(), It.IsAny<PartitionKey>(), null, default))
                 .ThrowsAsync(new CosmosException("Not Found", System.Net.HttpStatusCode.NotFound, 0, "", 0));
 
@@ -117,6 +132,12 @@
         public async Task<CosmosDbUrlRepositorySteps> WhenAddAsyncIsCalled()
         {
             _result = await _repository.AddAsync(_shortenedUrl).ConfigureAwait(false);
+            return this;
+        }
+
+        public async Task<CosmosDbUrlRepositorySteps> WhenAddToLookupAsyncIsCalled()
+        {
+            _result = await _repository.AddToLookupAsync(_shortenedUrl).ConfigureAwait(false);
             return this;
         }
 
