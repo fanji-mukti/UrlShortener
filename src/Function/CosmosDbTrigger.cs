@@ -1,57 +1,37 @@
 ﻿namespace UrlShortener.Function
 {
+    using EnsureThat;
     using Microsoft.Azure.Functions.Worker;
-    using Microsoft.Extensions.Logging;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using UrlShortener.Core.Repositories.Entities;
+    using UrlShortener.Core.Models;
+    using UrlShortener.Core.Repositories;
 
     internal class CosmosDbTrigger
     {
+        private readonly IUrlRepository _urlRepository;
+
+        public CosmosDbTrigger(IUrlRepository urlRepository)
+        {
+            _urlRepository = EnsureArg.IsNotNull(urlRepository, nameof(urlRepository));
+        }
+
         [Function("CosmosTrigger")]
         [CosmosDBOutput("UrlShortenerStore", "ShortenedUrl", Connection = "CosmosDb.ConnectionString")]
-        public IReadOnlyList<OriginalUrlDocument>? Run([CosmosDBTrigger(
+        public async Task RunAsync([CosmosDBTrigger(
             databaseName: "UrlShortenerStore",
             containerName:"ShortenedUrl",
             Connection = "CosmosDb.ConnectionString",
             LeaseContainerName = "leases",
-            CreateLeaseContainerIfNotExists = true)] IReadOnlyList<ShortenedUrlDocument> shortenedUrlDocuments,
-            FunctionContext context)
+            CreateLeaseContainerIfNotExists = true)] IReadOnlyList<ShortenedUrl> shortenedUrls)
         {
-            if (shortenedUrlDocuments is null || !shortenedUrlDocuments.Any())
+            if (shortenedUrls is null || !shortenedUrls.Any())
             {
-                return null;
+                return;
             }
 
-            var output = shortenedUrlDocuments
-                .Select(ToOriginalUrlDocument)
-                .ToList();
-
-            return output;
-
-            OriginalUrlDocument ToOriginalUrlDocument(ShortenedUrlDocument shortenedUrlDocument)
-            { 
-                return new OriginalUrlDocument(
-                    shortenedUrlDocument.OriginalUrl,
-                    shortenedUrlDocument.OriginalUrl,
-                    shortenedUrlDocument.OriginalUrl,
-                    shortenedUrlDocument.ShortUrl,
-                    shortenedUrlDocument.CreatedAt,
-                    shortenedUrlDocument.ExpiresAt,
-                    shortenedUrlDocument.ttl
-                );
-            }
+            var addToLookupTasks = shortenedUrls.Select(_urlRepository.AddToLookupAsync);
+            await Task.WhenAll(addToLookupTasks).ConfigureAwait(false);
         }
-
-        public record OriginalUrlDocument(
-            string id,
-            string partitionKey,
-            string originalUrl,
-            string shortUrl,
-            DateTime createdAt,
-            DateTime? expiresAt,
-            int ttl
-            );
     }
 }

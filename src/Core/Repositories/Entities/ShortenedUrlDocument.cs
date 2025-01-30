@@ -9,7 +9,7 @@
     /// <param name="ShortUrl">The shortened URL.</param>
     /// <param name="CreatedAt">The date and time when the URL was created.</param>
     /// <param name="ExpiresAt">The optional expiration date and time for the URL.</param>
-    public record ShortenedUrlDocument(
+    internal record ShortenedUrlDocument(
         string Id,
         string PartitionKey,
         string OriginalUrl,
