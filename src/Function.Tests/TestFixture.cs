@@ -1,6 +1,7 @@
 ﻿namespace Function.Tests
 {
     using Autofac;
+    using Function.Tests.Modules;
     using UrlShortener.Function.Configurations;
     using UrlShortener.Function.Modules;
 
@@ -29,7 +30,9 @@
 
             builder
                 .RegisterModule(new RepositoryModule(cosmosConfig))
-                .RegisterModule(new UrlShortenerServiceModule(serviceConfig));
+                .RegisterModule(new UrlShortenerServiceModule(serviceConfig))
+                .RegisterModule(new MappingModule())
+                .RegisterModule(new TestStepsModule());
 
             this.Container = builder.Build();
         }
