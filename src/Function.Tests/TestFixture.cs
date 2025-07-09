@@ -32,6 +32,7 @@
                 .RegisterModule(new RepositoryModule(cosmosConfig))
                 .RegisterModule(new UrlShortenerServiceModule(serviceConfig))
                 .RegisterModule(new MappingModule())
+                .RegisterModule(new FunctionTriggerModule())
                 .RegisterModule(new TestStepsModule());
 
             this.Container = builder.Build();
