@@ -10,7 +10,8 @@
             // This is a placeholder for future test step registrations.
             // Example: builder.RegisterType<MyTestStep>().As<IMyTestStep>();
             builder
-                .RegisterType<UrlShorternerHttpTriggerSteps>();
+                .RegisterType<UrlShorternerHttpTriggerSteps>()
+                .InstancePerLifetimeScope();
         }
     }
 }
