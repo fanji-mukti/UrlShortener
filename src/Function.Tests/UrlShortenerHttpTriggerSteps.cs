@@ -2,8 +2,6 @@
 {
     using FluentAssertions;
     using Microsoft.AspNetCore.Mvc;
-    using Microsoft.Azure.Functions.Worker.Http;
-    using Moq;
     using UrlShortener.Function.DTOs;
 
     public class UrlShorternerHttpTriggerSteps
@@ -20,13 +18,19 @@
 
         public async Task WhenShortenUrlAsyncIsCalled(ShortenUrlRequest shortenUrlRequest)
         {
-            _result = await _function.ShortenUrlAsync(Mock.Of<HttpRequestData>(), shortenUrlRequest);
+            _result = await _function.ShortenUrlAsync(null, shortenUrlRequest);
         }
 
-        public async Task WhenShortUrlAsyncIsCalled(string shortUrl)
+        public async Task WhenShortUrlAsyncIsCalledWithTheShortenedUrl()
         {
-            var req = new Mock<HttpRequestData>(MockBehavior.Strict, null).Object;
-            _result = await _function.ShortUrlAsync(Mock.Of<HttpRequestData>(), shortUrl);
+            var shortenedUrl = (ShortenedUrlResponse)((OkObjectResult)_result).Value!;
+
+            // the response will return full qualified url.
+            // Due to the test invoking the method directly instead via Http
+            // we need to extract the short url from the full url.
+            var shortUrl = shortenedUrl.ShortUrl.Split('/').Last();
+
+            _result = await _function.ShortUrlAsync(null, shortUrl);
         }
 
         public UrlShorternerHttpTriggerSteps ThenResultShouldBeOkObjectResultWithExpectedResponse(ShortenedUrlResponse expected)

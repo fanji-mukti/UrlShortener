@@ -1,6 +1,7 @@
 ﻿namespace Function.Tests
 {
     using Autofac;
+    using UrlShortener.Function.DTOs;
     using Xunit;
 
     [Collection(CosmosDbCollection.Name)]
@@ -17,9 +18,23 @@
         }
 
         [Fact]
-        public void Test()
+        public async Task ShortenUrl_WithValidRequest_ShouldBeAbleToRedirectToOriginalUrlWithTheShortenedUrl()
         {
-            var a = this.steps;
+            var shortenUrlRequest = new ShortenUrlRequest
+            {
+                OriginalUrl = "https://www.example.com/",
+            };
+
+            await this.steps
+                .WhenShortenUrlAsyncIsCalled(shortenUrlRequest)
+                .ConfigureAwait(true);
+
+            await this.steps
+                .WhenShortUrlAsyncIsCalledWithTheShortenedUrl()
+                .ConfigureAwait(true);
+
+            this.steps
+                .ThenResultShouldBeRedirectResult(shortenUrlRequest.OriginalUrl);
         }
 
         public void Dispose()
