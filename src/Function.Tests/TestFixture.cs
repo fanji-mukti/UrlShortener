@@ -2,6 +2,7 @@
 {
     using Autofac;
     using Function.Tests.Modules;
+    using Microsoft.Azure.Cosmos;
     using UrlShortener.Function.Configurations;
     using UrlShortener.Function.Modules;
 
@@ -28,6 +29,8 @@
                 WorkerId = 1,
             };
 
+            SetupCosmosDbAsync(cosmosConfig).GetAwaiter().GetResult();
+
             builder
                 .RegisterModule(new RepositoryModule(cosmosConfig))
                 .RegisterModule(new UrlShortenerServiceModule(serviceConfig))
@@ -47,6 +50,16 @@
 
             this.Container.Dispose();
             this.disposed = true;
+        }
+
+        private async Task SetupCosmosDbAsync(CosmosDbConfiguration config)
+        { 
+            var client = new CosmosClient(config.ConnectionString);
+            var response = await client.CreateDatabaseIfNotExistsAsync("UrlShortenerStore").ConfigureAwait(false);
+            var database = response.Database;
+
+            await database.CreateContainerIfNotExistsAsync("ShortenedUrl", "/partitionKey").ConfigureAwait(false);
+            await database.CreateContainerIfNotExistsAsync("OriginalUrl", "/partitionKey").ConfigureAwait(false);
         }
     }
 }

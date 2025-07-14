@@ -12,6 +12,10 @@
             builder
                 .RegisterType<UrlShorternerHttpTriggerSteps>()
                 .InstancePerLifetimeScope();
+
+            builder
+                .RegisterType<CosmosDbTriggerSteps>()
+                .InstancePerLifetimeScope();
         }
     }
 }
