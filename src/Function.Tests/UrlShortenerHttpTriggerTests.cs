@@ -37,6 +37,24 @@
                 .ThenResultShouldBeRedirectResult(shortenUrlRequest.OriginalUrl);
         }
 
+        [Theory]
+        [InlineData(null)]
+        [InlineData("invalid-url-format")]
+        public async Task ShortenUrl_WithInvalidRequest_ShouldReturnBadRequest(string originalUrl)
+        {
+            var shortenUrlRequest = new ShortenUrlRequest
+            {
+                OriginalUrl = originalUrl,
+            };
+
+            await this.steps
+                .WhenShortenUrlAsyncIsCalled(shortenUrlRequest)
+                .ConfigureAwait(true);
+
+            this.steps
+                .ThenResultShouldBeBadRequestObjectResult();
+        }
+
         [Fact]
         public async Task ShortUrl_NotExistsShortUrl_ShouldReturnNotFound()
         { 
