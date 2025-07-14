@@ -4,7 +4,7 @@
     using Microsoft.AspNetCore.Mvc;
     using UrlShortener.Function.DTOs;
 
-    public class UrlShorternerHttpTriggerSteps
+    public sealed class UrlShorternerHttpTriggerSteps
     {
         private readonly UrlShorternerHttpTrigger _function;
         private IActionResult _result;
