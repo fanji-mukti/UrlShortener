@@ -13,7 +13,7 @@ namespace Function
     /// <summary>
     /// Azure Function HTTP trigger for URL shortening operations.
     /// </summary>
-    public class UrlShorternerHttpTrigger
+    public sealed class UrlShorternerHttpTrigger
     {
         private readonly IUrlShortenerService _urlShortenerService;
         private readonly IMapper _mapper;

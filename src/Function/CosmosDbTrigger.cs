@@ -7,7 +7,7 @@
     using UrlShortener.Core.Models;
     using UrlShortener.Core.Repositories;
 
-    internal class CosmosDbTrigger
+    public sealed class CosmosDbTrigger
     {
         private readonly IUrlRepository _urlRepository;
 
