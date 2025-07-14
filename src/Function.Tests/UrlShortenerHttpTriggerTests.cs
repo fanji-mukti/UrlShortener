@@ -37,6 +37,17 @@
                 .ThenResultShouldBeRedirectResult(shortenUrlRequest.OriginalUrl);
         }
 
+        [Fact]
+        public async Task ShortUrl_NotExistsShortUrl_ShouldReturnNotFound()
+        { 
+            await this.steps
+                .WhenShortUrlAsyncIsCalled("non-existing-short-url")
+                .ConfigureAwait(true);
+
+            this.steps
+                .ThenResultShouldBeNotFoundResult();
+        }
+
         public void Dispose()
         {
             if (this.disposed)

@@ -21,7 +21,7 @@
             _result = await _function.ShortenUrlAsync(null, shortenUrlRequest);
         }
 
-        public async Task WhenShortUrlAsyncIsCalledWithTheShortenedUrl()
+        public  Task WhenShortUrlAsyncIsCalledWithTheShortenedUrl()
         {
             var shortenedUrl = (ShortenedUrlResponse)((OkObjectResult)_result).Value!;
 
@@ -29,7 +29,11 @@
             // Due to the test invoking the method directly instead via Http
             // we need to extract the short url from the full url.
             var shortUrl = shortenedUrl.ShortUrl.Split('/').Last();
+            return this.WhenShortUrlAsyncIsCalled(shortUrl);
+        }
 
+        public async Task WhenShortUrlAsyncIsCalled(string shortUrl)
+        {
             _result = await _function.ShortUrlAsync(null, shortUrl);
         }
 
