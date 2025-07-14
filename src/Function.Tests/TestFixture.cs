@@ -8,6 +8,7 @@
 
     public sealed class TestFixture : IDisposable
     {
+        private readonly CosmosDbConfiguration cosmosConfig;
         private bool disposed;
 
         public IContainer Container { get; }
@@ -16,7 +17,7 @@
         {
             var builder = new ContainerBuilder();
 
-            var cosmosConfig = new CosmosDbConfiguration
+            this.cosmosConfig = new CosmosDbConfiguration
             {
                 ConnectionString = "AccountEndpoint=https://localhost:8081/;AccountKey=C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==",
                 ConnectionMode = "Direct",
@@ -29,7 +30,7 @@
                 WorkerId = 1,
             };
 
-            SetupCosmosDbAsync(cosmosConfig).GetAwaiter().GetResult();
+            SetupCosmosDbAsync(this.cosmosConfig).GetAwaiter().GetResult();
 
             builder
                 .RegisterModule(new RepositoryModule(cosmosConfig))
@@ -48,8 +49,17 @@
                 return;
             }
 
+            this.CleanupCosmosDbAsync(this.cosmosConfig).GetAwaiter().GetResult();
             this.Container.Dispose();
             this.disposed = true;
+        }
+
+        private async Task CleanupCosmosDbAsync(CosmosDbConfiguration config)
+        {
+            var client = new CosmosClient(config.ConnectionString);
+            var database = client.GetDatabase("UrlShortenerStore");
+
+            await database.DeleteAsync().ConfigureAwait(false);
         }
 
         private async Task SetupCosmosDbAsync(CosmosDbConfiguration config)
