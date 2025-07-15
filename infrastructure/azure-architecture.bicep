@@ -13,11 +13,11 @@ param location string
 @description('A set of key-value pairs to assign as tags to all deployed resources.')
 param tagsValue object
 
-@description('Metering App Service Plan SKU.')
-param meteringAppServicePlanSku skuInfo
+@description('App Service Plan SKU.')
+param appServicePlanSku skuInfo
 
-@description('Metering App Service Plan Kind.')
-param meteringAppServicePlanKind string
+@description('App Service Plan Kind.')
+param appServicePlanKind string
 
 @description('Address blocks reserved for this virtual network in CIDR notation.')
 param virtualNetworkAddressPrefixes string[]
@@ -106,20 +106,8 @@ module appServicePlan 'modules/app-service-plan.bicep' = {
   params: {
     name: 'url-shortener-${location}-${environmentName}-asp'
     location: location
-    sku: meteringAppServicePlanSku
-    kind: meteringAppServicePlanKind
-    tags: tagsValue
-  }
-}
-
-module meteringWebApp 'modules/web-app.bicep' = {
-  scope: resourceGroup
-  params: {
-    name: 'url-shortener-${location}-${environmentName}-app'
-    appServicePlanId: appServicePlan.outputs.id
-    publicNetworkAccess: 'Enabled'
-    virtualNetworkSubnetId: appSubnet.outputs.id
-    alwaysOn: true
+    sku: appServicePlanSku
+    kind: appServicePlanKind
     tags: tagsValue
   }
 }
