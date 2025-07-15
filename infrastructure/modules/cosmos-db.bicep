@@ -16,7 +16,7 @@ type UrlShortenerStoreThrougput = {
   originalUrlContainer: int
 }
 
-@description('The throughput for each of the container in metering database.')
+@description('The throughput for each of the container in cosmos db.')
 param throughput UrlShortenerStoreThrougput
 
 var locations = [
