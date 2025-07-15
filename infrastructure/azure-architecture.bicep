@@ -32,7 +32,7 @@ param databaseSubNetaddressPrefix string
 param databaseSubnetServiceEndpoints serviceEndpoint[]
 
 resource resourceGroup 'Microsoft.Resources/resourceGroups@2025-04-01' = {
-  name: 'edq-ps-metering-${environmentName}-rg'
+  name: 'url-shortener-${environmentName}-rg'
   location: location
   tags: tagsValue
 }
@@ -40,7 +40,7 @@ resource resourceGroup 'Microsoft.Resources/resourceGroups@2025-04-01' = {
 module virtualNetwork 'modules/virtual-network.bicep' = {
   scope: resourceGroup
   params: {
-    name: 'edq-ps-metering-${location}-${environmentName}-vnet'
+    name: 'url-shortener-${location}-${environmentName}-vnet'
     location: location
     addressPrefixes: virtualNetworkAddressPrefixes
     tags: tagsValue
@@ -50,7 +50,7 @@ module virtualNetwork 'modules/virtual-network.bicep' = {
 module appSubnet 'modules/virtual-network-subnet.bicep' = {
   scope: resourceGroup
   params: {
-    name: 'edq-ps-metering-${location}-${environmentName}-snet-app'
+    name: 'url-shortener-${location}-${environmentName}-snet-app'
     addressPrefix: appSubNetaddressPrefix
     serviceEndpoints: []
     virtualNetworkName: virtualNetwork.outputs.name
@@ -68,7 +68,7 @@ module appSubnet 'modules/virtual-network-subnet.bicep' = {
 module databaseSubnet 'modules/virtual-network-subnet.bicep' = {
   scope: resourceGroup
   params: {
-    name: 'edq-ps-metering-${location}-${environmentName}-snet-database'
+    name: 'url-shortener-${location}-${environmentName}-snet-database'
     addressPrefix: databaseSubNetaddressPrefix
     serviceEndpoints: databaseSubnetServiceEndpoints
     virtualNetworkName: virtualNetwork.outputs.name
@@ -78,7 +78,7 @@ module databaseSubnet 'modules/virtual-network-subnet.bicep' = {
 module cosmosDb 'modules/cosmos-db.bicep' = {
   scope: resourceGroup
   params: {
-    accountName: 'edq-ps-metering-${environmentName}-cosmos'
+    accountName: 'url-shortener-${environmentName}-cosmos'
     throughput: {
       licenseContainer: 400
       pendinglicenseContainer: 400
@@ -91,7 +91,7 @@ module cosmosDb 'modules/cosmos-db.bicep' = {
 module cosmosDbPrivateEndpoint 'modules/private-endpoint.bicep' = {
   scope: resourceGroup
   params: {
-    name: 'edq-ps-metering-${location}-${environmentName}-pep-cosmosdb'
+    name: 'url-shortener-${location}-${environmentName}-pep-cosmosdb'
     location: location
     privateLinkServiceId: cosmosDb.outputs.id
     vnetId: virtualNetwork.outputs.id
@@ -104,7 +104,7 @@ module cosmosDbPrivateEndpoint 'modules/private-endpoint.bicep' = {
 module appServicePlan 'modules/app-service-plan.bicep' = {
   scope: resourceGroup
   params: {
-    name: 'edq-ps-metering-${location}-${environmentName}-asp'
+    name: 'url-shortener-${location}-${environmentName}-asp'
     location: location
     sku: meteringAppServicePlanSku
     kind: meteringAppServicePlanKind
@@ -115,7 +115,7 @@ module appServicePlan 'modules/app-service-plan.bicep' = {
 module meteringWebApp 'modules/web-app.bicep' = {
   scope: resourceGroup
   params: {
-    name: 'edq-ps-metering-ingestor-${location}-${environmentName}-app'
+    name: 'url-shortener-${location}-${environmentName}-app'
     appServicePlanId: appServicePlan.outputs.id
     publicNetworkAccess: 'Enabled'
     virtualNetworkSubnetId: appSubnet.outputs.id
@@ -127,7 +127,7 @@ module meteringWebApp 'modules/web-app.bicep' = {
 module storageAccount 'modules/storage-account.bicep' = {
   scope: resourceGroup
   params: {
-    name: 'edqpsmetering${environmentName}sa'
+    name: 'urlshortener${environmentName}sa'
     location: location
     tags: tagsValue
     sku: {
@@ -139,7 +139,7 @@ module storageAccount 'modules/storage-account.bicep' = {
 module blobPrivateEndpoint 'modules/private-endpoint.bicep' = {
   scope: resourceGroup
   params: {
-    name: 'edq-ps-metering-${location}-${environmentName}-pep-blobstorage'
+    name: 'url-shortener-${location}-${environmentName}-pep-blobstorage'
     location: location
     privateLinkServiceId: storageAccount.outputs.id
     vnetId: virtualNetwork.outputs.id
@@ -152,7 +152,7 @@ module blobPrivateEndpoint 'modules/private-endpoint.bicep' = {
 module functionApp 'modules/function-app.bicep' = {
   scope: resourceGroup
   params: {
-    name: 'edq-ps-metering-${location}-${environmentName}-funcapp'
+    name: 'url-shortener-${location}-${environmentName}-funcapp'
     appServicePlanId: appServicePlan.outputs.id
     alwaysOn: true
     storageAccountConnection: storageAccount.outputs.blobPrimaryConnection
