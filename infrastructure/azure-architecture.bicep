@@ -80,9 +80,8 @@ module cosmosDb 'modules/cosmos-db.bicep' = {
   params: {
     accountName: 'url-shortener-${environmentName}-cosmos'
     throughput: {
-      licenseContainer: 400
-      pendinglicenseContainer: 400
-      usageContainer: 800
+      shortenedUrlContainer: 400
+      originalUrlContainer: 400
     }
     tags: tagsValue
   }
